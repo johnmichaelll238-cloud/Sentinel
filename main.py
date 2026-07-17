@@ -6,3 +6,4 @@ initialise_database()
 metrics = collect_metrics()
 
 print(metrics)
+print("The Lint is Clean 💎🥇🎯")

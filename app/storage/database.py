@@ -12,30 +12,65 @@ def initialise_database(
         CREATE TABLE IF NOT EXISTS metrics(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         timestamp TEXT,
-        cpu_percent REAL
+        cpu_percent REAL,
+        memory_percent REAL,
+        memory_used INTEGER,
+        memory_available INTEGER,
+        disk_percent REAL,
+        disk_used INTEGER,
+        disk_free INTEGER,
+        bytes_sent INTEGER,
+        bytes_received INTEGER
         )
-    """)
+    """
+    )
     #commit changes made to database
     connection.commit()
     #close connection
     connection.close()
 
 def insert_metrics(
-    metrics:str
+    metrics:dict
     )->None:
     connection = sqlite3.connect("data/sentinel.db")
     cursor = connection.cursor()
     cursor.execute("""
-    INSERT INTO metrics
-    (timestamp, cpu_percent)
-    VALUES (?, ?)
+    INSERT INTO metrics (
+    timestamp,
+    cpu_percent,
+    memory_percent,
+    memory_used,
+    memory_available,
+    disk_percent,
+    disk_used,
+    disk_free,
+    bytes_sent,
+    bytes_received
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """,
     (
     
     metrics["timestamp"],
     
-    metrics["cpu_percent"]
+    metrics["cpu_percent"],
 
+    metrics["memory_percent"],
+    
+    metrics["memory_used"],
+
+    metrics["memory_available"],
+
+    metrics["disk_percent"],
+
+    metrics["disk_used"],
+
+    metrics["disk_free"],
+
+    metrics["bytes_sent"],
+
+    metrics["bytes_received"]
+    
     )
     )
     connection.commit()
