@@ -76,5 +76,46 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     connection.commit()
     connection.close()
 
+def get_latest_metric(
+
+)->dict:
+    connection = sqlite3.connect("data/sentinel.db")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    cursor.execute("""
+    SELECT *
+    FROM metrics
+    ORDER BY id DESC
+    LIMIT 1;
     
+    """)
+    row = cursor.fetchone()
+
+    connection.close()
+
+    if row is None:
+        return None
+
+    return dict(row)
+
+def get_recent_metrics(
+    limit
+    )->list[dict]:
     
+    connection = sqlite3.connect("data/sentinel.db")
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+    SELECT *
+    FROM metrics
+    ORDER BY id DESC
+    LIMIT (?)
+
+    """, (limit,)
+    )
+    rows = cursor.fetchall()
+    connection.close()
+    
+    return [dict(row) for row in rows]
