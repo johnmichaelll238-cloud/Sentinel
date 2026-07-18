@@ -1,6 +1,7 @@
 from api_client import( 
     get_latest_metrics,
-    get_recent_metrics
+    get_recent_metrics,
+    get_anomaly
     )
 
 import streamlit as st
@@ -14,7 +15,17 @@ st_autorefresh(
 import requests
 
 
-st.title("SENTINEL")
+st.markdown(
+    """
+    <h1 style='text-align:center; margin-bottom:0;'>
+        🛰️ SENTINEL
+    </h1>
+    <h4 style='text-align:center; color:gray; margin-top:0;'>
+        Intelligent System Monitoring
+    </h4>
+    """,
+    unsafe_allow_html=True,
+)
 metrics = get_latest_metrics()
 
 col1, col2 = st.columns(2)
@@ -71,6 +82,14 @@ with col6:
     )
 
 history = get_recent_metrics()
+
+anomaly = get_anomaly()
+
+if anomaly["prediction"] == 1:
+    st.success("🟢 System Status: Normal")
+else:
+    st.error("🔴 System Status: Anomaly Detected")
+
 st.write(len(history))
 
 cpu_history = [metric["cpu_percent"] for metric in history]

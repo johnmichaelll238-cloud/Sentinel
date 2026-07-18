@@ -19,3 +19,7 @@ def get_recent_metrics(
 
     history = history.json()
     return history
+
+def get_anomaly() -> dict:
+    response = requests.get(f"{BASE_URL}/anomaly")
+    return response.json()

@@ -20,7 +20,8 @@ def initialise_database(
         disk_used INTEGER,
         disk_free INTEGER,
         bytes_sent INTEGER,
-        bytes_received INTEGER
+        bytes_received INTEGER,
+        prediction INTEGER
         )
     """
     )
@@ -120,3 +121,20 @@ def get_recent_metrics(
     connection.close()
     
     return [dict(row) for row in rows]
+
+
+def update_latest_prediction(
+    prediction : int
+    ):
+    connection = sqlite3.connect("data/sentinel.db")
+    cursor = connection.cursor()
+    cursor.execute("""
+      UPDATE metrics
+      SET prediction = ?
+      WHERE id = (
+      SELECT MAX(id)
+      FROM metrics
+      );
+    """, (prediction,))
+    connection.commit()
+    connection.close()
