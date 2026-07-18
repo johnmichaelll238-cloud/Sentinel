@@ -116,6 +116,7 @@ def get_recent_metrics(
     """, (limit,)
     )
     rows = cursor.fetchall()
+    rows.reverse()
     connection.close()
     
     return [dict(row) for row in rows]
