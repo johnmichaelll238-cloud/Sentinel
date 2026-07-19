@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from psutil import cpu_percent
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.storage.database import (
     get_latest_metric,
@@ -7,6 +7,14 @@ from app.storage.database import (
 )
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health")
